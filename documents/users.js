@@ -5,7 +5,8 @@ const UserSchema = mongoose.Schema({
   password: String,
   mobileNumber: String,
   dob: String,
+  status: String,
 });
 
-const UsersDoc = mongoose.model('Users', UserSchema);
+const UsersDoc = mongoose.model('User', UserSchema);
 export default UsersDoc;

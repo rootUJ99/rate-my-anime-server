@@ -5,6 +5,7 @@ import logger from 'morgan';
 import dotenv from 'dotenv';
 // import fs from 'fs';
 import mongoose from 'mongoose';
+import cors from 'cors';
 import indexRouter from './routes/index';
 import usersRouter from './routes/users';
 import animeRouter from './routes/anime';
@@ -14,16 +15,16 @@ const app = express();
 dotenv.config();
 
 mongoose.connect(process.env.DB_CONFIG, {useNewUrlParser: true, useUnifiedTopology: true});
-var db = mongoose.connection;
+const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function() {
+db.once('open', () => {
   console.log('connected to db')
 });
+app.use(cors());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-console.log('__dirname', __dirname);
 app.use(express.static(path.join(__dirname, 'public')));
 // const getCircularReplacer = () => {
 //   const seen = new WeakSet();
@@ -43,12 +44,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 //   fs.writeFile('res.txt', JSON.stringify(res, getCircularReplacer(), 4), 'utf8', err=>{console.log(err,'err')})
 //   console.log('res', res);
 // })
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  next();
-});
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//   res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+//   next();
+// });
 
 const exceptPaths = (pathArr, middleware) => {
   return (req, res, next) => {

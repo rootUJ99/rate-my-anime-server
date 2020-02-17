@@ -4,6 +4,7 @@ const AnimeListSchema = mongoose.Schema({
   rating: String,
   review: String,
   thumbUrl: String,
+  userId: String,
 });
-const AnimeListDoc = mongoose.model('AnimeListDoc', AnimeListSchema);
-export default AnimeListDoc;
+const AnimeDoc = mongoose.model('Anime', AnimeListSchema);
+export default AnimeDoc;

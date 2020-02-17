@@ -5,20 +5,17 @@ import userDocs from '../documents/users';
 
 /* GET users listing. */
 
-// router.get('/', someSpicymiddleWare, (req, res, next)=> {
-//   res.send({yeah: 'success'});
-// });
 
 router.post('/create', (req, res)=> {
   const details = req.body;
   console.log('details', details);
-  new userDocs({...details}).save((err, userDetails)=> {
+  new userDocs({...details, status: 'active'}).save((err, userDetails)=> {
     if (err) return res.status(400).send({ err });
     return res.status(200).send({...userDetails._doc});
   })
 });
 
-router.post('/token', (req, res, next) => {
+router.post('/token', (req, res) => {
   const {userName, password} = req.body;
   userDocs.where({ userName, password}).findOne((err, user)=>{
     if (err) return err;
@@ -31,5 +28,22 @@ router.post('/token', (req, res, next) => {
   })
 });
 
+router.put('/update/:id', (req,res) => {
+  const {id } = req.params;
+  const { body } = req;
+  console.log('body', body);
+  userDocs.findByIdAndUpdate(id, {...body}, (err, user)=> {
+    if (err) return res.status(400).send({ err });
+    return res.status(200).status(user);
+  })
+});
+
+router.get('/details/:id', (req, res)=> {
+  const {id} = req.params;
+  userDocs.findById(id, (err, user)=> {
+    if (err) return res.status(400).send({ err });
+    return res.status(200).status(user);
+  })
+});
 
 export default router;

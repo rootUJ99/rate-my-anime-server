@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken';
 const jwtMiddleWare = (req, res, next)=> {
-  const headers = req.headers['authorization'];
+  const headers = req.headers.authorization;
   if (!headers){
     res.status(403).send('forbidden');
   } else {
@@ -10,10 +10,7 @@ const jwtMiddleWare = (req, res, next)=> {
       if (err) {
         res.status(403).send('forbidden');
       }else {
-        // res.send({
-        //   yo: 'yeah',
-        //   authData,
-        // })
+        res.locals.tokenData = authData;
         next();
       }
     })

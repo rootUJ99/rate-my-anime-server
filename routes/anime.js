@@ -19,8 +19,8 @@ router.get('/myAnimelist/', async(req,res)=>{
 });
 router.post('/addAnime', (req,res)=>{
   const details = req.body;
-  console.log("details", details); 
-  new AnimeListDoc({...details}).save((err, animeDetails)=>{
+  const userId = res.locals.tokenData.id;
+  new AnimeListDoc({...details, userId}).save((err, animeDetails)=>{
     if (err) return res.status(400).send({ err });
     return res.status(200).send({...animeDetails._doc})
   })
@@ -40,7 +40,7 @@ router.put('/updateAnime/:id', (req,res)=> {
   AnimeListDoc.findByIdAndUpdate(id, {...details}, (err, anime)=>{
     if (err) return res.status(400).send({ err });
     return res.status(200).send(anime)
-  })
+  });
 });
 
 router.delete('/deleteAnime/:id', (req, res)=> {
