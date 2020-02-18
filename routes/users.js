@@ -34,7 +34,7 @@ router.put('/update/:id', (req,res) => {
   console.log('body', body);
   userDocs.findByIdAndUpdate(id, {...body}, (err, user)=> {
     if (err) return res.status(400).send({ err });
-    return res.status(200).status(user);
+    return res.status(200).send(user);
   })
 });
 
@@ -42,7 +42,7 @@ router.get('/details/:id', (req, res)=> {
   const {id} = req.params;
   userDocs.findById(id, (err, user)=> {
     if (err) return res.status(400).send({ err });
-    return res.status(200).status(user);
+    return res.status(200).send(user);
   })
 });
 
