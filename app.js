@@ -59,10 +59,10 @@ const exceptPaths = (pathArr, middleware) => {
     return middleware(req, res, next);
   }
 }
-const excludedArr =['/users/token','/users/create' ];
+const excludedArr =['/api/user/token','/api/user/create', '/api/anime/myAnimelist'];
 app.use(exceptPaths(excludedArr,jwtMiddleWare));
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/api', animeRouter);
+app.use('/api/user', usersRouter);
+app.use('/api/anime', animeRouter);
 
 export default app;

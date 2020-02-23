@@ -10,45 +10,57 @@ const axiosApiCall = async (animeName) => {
   return animelist.data;
 }
 
-router.get('/myAnimelist/', async(req,res)=>{
-  const {animeName} = req.query;
-  if (animeName) {
+router.get('/myAnimelist', async(req,res)=>{
+  try {
+    const {animeName} = req.query;
     const data = await axiosApiCall(animeName);
-    return res.send(data)
+    return res.send(data);
+  } catch (err) {
+    return res.send({ err });
   }
 });
-router.post('/addAnime', (req,res)=>{
-  const details = req.body;
-  const userId = res.locals.tokenData.id;
-  new AnimeListDoc({...details, userId}).save((err, animeDetails)=>{
-    if (err) return res.status(400).send({ err });
-    return res.status(200).send({...animeDetails._doc})
-  })
+router.post('/add', async(req,res)=>{
+  try {
+    const details = req.body;
+    const userId = res.locals.tokenData.id;
+    const newAnime = new AnimeListDoc({...details, userId});
+    const animeDetails = await newAnime.save();
+    return res.status(200).send({...animeDetails._doc});
+  } catch(err) {
+    return res.status(400).send({ err });
+  }
 });
 
-router.get('/animeList', (req, res)=> {
-  AnimeListDoc.find((err, animelist) =>{
-    if (err) return res.status(400).send({ err });
+router.get('/list', async(req, res)=> {
+  try {
+    const userId = res.locals.tokenData.id;
+    const animelist = await AnimeListDoc.find({userId});
     return res.status(200).send(animelist)
-  })
+  } catch(err) {
+    return res.status(400).send({ err });
+  }
 });
 
-router.put('/updateAnime/:id', (req,res)=> {
-  const {id} = req.params;
-  const details = req.body;
-  // res.send('ok');
-  AnimeListDoc.findByIdAndUpdate(id, {...details}, (err, anime)=>{
-    if (err) return res.status(400).send({ err });
+router.put('/update/:id', async(req,res)=> {
+  try {
+    const {id} = req.params;
+    const details = req.body;
+    const anime = await AnimeListDoc.findByIdAndUpdate(id, {...details});
     return res.status(200).send(anime)
-  });
+  } catch(err) {
+    console.log('err', err);
+    return res.status(400).send({ err });
+  }
 });
 
-router.delete('/deleteAnime/:id', (req, res)=> {
-  const {id} = req.params;
-  AnimeListDoc.findByIdAndDelete(id, (err, anime)=>{
-    if (err) return res.status(400).send({ err });
+router.delete('/delete/:id', async(req, res)=> {
+  try {
+    const {id} = req.params;
+    const anime = await AnimeListDoc.findByIdAndDelete(id);
     return res.status(200).send(anime)
-  });
+  } catch(err) {
+    return res.status(400).send({ err });
+  }
 });
 
 export default router;
