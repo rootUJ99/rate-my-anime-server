@@ -23,7 +23,8 @@ router.post('/add', async(req,res)=>{
   try {
     const details = req.body;
     const userId = res.locals.tokenData.id;
-    const newAnime = new AnimeListDoc({...details, userId});
+    const dateCreated = new Date().toISOString();
+    const newAnime = new AnimeListDoc({...details, userId, dateCreated});
     const animeDetails = await newAnime.save();
     return res.status(200).send({...animeDetails._doc});
   } catch(err) {
@@ -45,7 +46,8 @@ router.put('/update/:id', async(req,res)=> {
   try {
     const {id} = req.params;
     const details = req.body;
-    const anime = await AnimeListDoc.findByIdAndUpdate(id, {...details});
+    const dateUpdated = new Date().toISOString();
+    const anime = await AnimeListDoc.findByIdAndUpdate(id, {...details, dateUpdated});
     return res.status(200).send(anime)
   } catch(err) {
     console.log('err', err);
