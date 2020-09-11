@@ -1,6 +1,6 @@
 import express from 'express';
 import axios from 'axios';
-import AnimeListDoc from '../models/animeList';
+import AnimeListDoc from '../models/animeList.js';
 const router = express.Router();
 
 

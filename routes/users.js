@@ -1,7 +1,7 @@
 import express from 'express';
 import jwt from 'jsonwebtoken';
 const router = express.Router();
-import userDocs from '../models/users';
+import userDocs from '../models/users.js';
 import {promisify} from 'util'
 
 
